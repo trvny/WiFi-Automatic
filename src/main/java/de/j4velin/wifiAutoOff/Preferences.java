@@ -572,6 +572,42 @@ public class Preferences extends PreferenceActivity {
             }
         });
 
+        final CheckBoxPreference bluetoothConnected = (CheckBoxPreference) findPreference("wifi_bluetooth_connected");
+        final CheckBoxPreference wifiToggleBluetooth = (CheckBoxPreference) findPreference("wifi_toggle_bluetooth");
+
+        if (!wifiToggleBluetooth.isChecked()) {
+            bluetoothConnected.setEnabled(false);
+            bluetoothConnected.setChecked(false);
+        }
+
+        wifiToggleBluetooth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (wifiToggleBluetooth.isChecked()) {
+                    bluetoothConnected.setEnabled(true);
+                } else {
+                    bluetoothConnected.setEnabled(false);
+                    bluetoothConnected.setChecked(false);
+                }
+                return true;
+            }
+        });
+
+        findPreference("keep_ssids").setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                newValue != null && !newValue.toString().trim().isEmpty() &&
+                                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                        PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+                        }
+                        return true;
+                    }
+                });
+
         findPreference("log")
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override

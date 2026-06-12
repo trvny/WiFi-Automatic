@@ -33,3 +33,9 @@ Thumbs.db
 .gradle
 build/
 *.iml
+# local signing & outputs
+*.jks
+!example.keystore.jks
+*.apk
+*.idsig
+local.properties
