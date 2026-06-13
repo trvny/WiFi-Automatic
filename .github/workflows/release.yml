@@ -17,7 +17,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Resolve tag
         id: tag
@@ -31,7 +31,7 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew assembleFdroidRelease
+          ./gradlew --no-daemon clean assembleFdroidRelease
 
       - name: Sign APK
         env:
@@ -40,10 +40,17 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          set -x
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
-          UNSIGNED=build/outputs/apk/fdroid/release/wifi-fdroid-release-unsigned.apk
-          OUT=wifi-automatic-${{ steps.tag.outputs.name }}.apk
+          UNSIGNED=$(find "$GITHUB_WORKSPACE" -path '*/release/*' -name '*.apk' | head -1)
+          echo "Found unsigned APK: $UNSIGNED"
+          if [ -z "$UNSIGNED" ]; then
+            echo "No release APK found anywhere:"
+            find "$GITHUB_WORKSPACE" -name '*.apk' -print
+            exit 1
+          fi
+          OUT="$GITHUB_WORKSPACE/wifi-automatic-${{ steps.tag.outputs.name }}.apk"
           "$BT/zipalign" -f 4 "$UNSIGNED" "$OUT"
           "$BT/apksigner" sign \
             --ks "$RUNNER_TEMP/release.jks" \
@@ -55,7 +62,7 @@ jobs:
           echo "APK=$OUT" >> "$GITHUB_ENV"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.name }}
           name: ${{ steps.tag.outputs.name }}
