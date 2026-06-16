@@ -40,7 +40,6 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          set -x
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
           UNSIGNED=$(find "$GITHUB_WORKSPACE" -path '*/release/*' -name '*.apk' | head -1)
@@ -54,9 +53,9 @@ jobs:
           "$BT/zipalign" -f 4 "$UNSIGNED" "$OUT"
           "$BT/apksigner" sign \
             --ks "$RUNNER_TEMP/release.jks" \
-            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --ks-pass "pass:env:KEYSTORE_PASSWORD" \
             --ks-key-alias "$KEY_ALIAS" \
-            --key-pass "pass:$KEY_PASSWORD" \
+            --key-pass "pass:env:KEY_PASSWORD" \
             "$OUT"
           "$BT/apksigner" verify "$OUT"
           echo "APK=$OUT" >> "$GITHUB_ENV"
