@@ -50,12 +50,12 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.support.annotation.LayoutRes;
-import android.support.v4.content.PermissionChecker;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.LayoutRes;
+import androidx.core.content.PermissionChecker;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -201,46 +201,43 @@ public class Preferences extends PreferenceActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         // action bar overflow menu
-        switch (item.getItemId()) {
-            case R.id.enable:
-                break;
-            case R.id.action_wifi_adv:
+        final int id = item.getItemId();
+        if (id == R.id.enable) {
+            // toggle handled by the action view switch
+        } else if (id == R.id.action_wifi_adv) {
+            try {
+                startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (Exception e) {
+                Toast.makeText(this, R.string.settings_not_found_, Toast.LENGTH_SHORT).show();
+            }
+        } else if (id == R.id.action_apps) {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://search?q=pub:j4velin"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (ActivityNotFoundException anf) {
                 try {
-                    startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS)
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+                            "https://play.google.com/store/apps/developer?id=j4velin"))
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (Exception e) {
-                    Toast.makeText(this, R.string.settings_not_found_, Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.action_apps:
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("market://search?q=pub:j4velin"))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (ActivityNotFoundException anf) {
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                                "https://play.google.com/store/apps/developer?id=j4velin"))
-                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                    } catch (ActivityNotFoundException anf2) {
-                        Toast.makeText(this,
-                                "No browser found to load https://play.google.com/store/apps/developer?id=j4velin",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-            case R.id.action_donate:
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("https://j4velin.de/donate.php"))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (ActivityNotFoundException anf) {
-                    Toast.makeText(this, "No browser found to load https://j4velin.de/donate.php",
+                } catch (ActivityNotFoundException anf2) {
+                    Toast.makeText(this,
+                            "No browser found to load https://play.google.com/store/apps/developer?id=j4velin",
                             Toast.LENGTH_LONG).show();
                 }
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+            }
+        } else if (id == R.id.action_donate) {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://j4velin.de/donate.php"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (ActivityNotFoundException anf) {
+                Toast.makeText(this, "No browser found to load https://j4velin.de/donate.php",
+                        Toast.LENGTH_LONG).show();
+            }
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }
