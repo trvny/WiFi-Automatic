@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdk 35
+    compileSdk 37
 
     defaultConfig {
         applicationId "de.j4velin.wifiAutoOff"
@@ -54,7 +54,8 @@ android {
     }
 
     lint {
-        disable "ExtraTranslation"
+        // ExpiredTargetSdkVersion is a Google Play requirement; not applicable to F-Droid builds
+        disable "ExtraTranslation", "ExpiredTargetSdkVersion"
     }
     namespace 'de.j4velin.wifiAutoOff'
 }
