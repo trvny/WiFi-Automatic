@@ -1,0 +1,1 @@
+Migrated to AndroidX, upgraded build toolchain to AGP 9 / Gradle 9 / JDK 17, fixed Bluetooth preference handling, raised minSdk to Android 6.0 (API 23).

@@ -1,0 +1,13 @@
+WiFi Automatic helps extend your device's standby time by automatically turning off WiFi when you don't need it and turning it back on when you do.
+
+Designed primarily for WiFi-only tablets, the app monitors screen state, Bluetooth connections, charging status, and network availability to decide when to switch WiFi off and on — with a configurable delay.
+
+Features:
+* Disable WiFi automatically after the screen turns off (with a configurable timeout)
+* Re-enable WiFi when you unlock or turn on the screen
+* Periodically scan for known networks and disable WiFi if none are found
+* Trigger WiFi on/off based on Bluetooth connections or charging state
+* Quick Settings tile for manual overrides
+* No ads, no tracking, no cloud accounts required
+
+This is the travino community fork, consolidating fixes and modernisation from several upstream forks. Source code is available on GitHub.
