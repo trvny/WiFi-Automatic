@@ -48,6 +48,40 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Validate release signing secrets
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          for name in KEYSTORE_B64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing Actions secret: $name"
+              exit 1
+            fi
+          done
+
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/release.jks"
+          check_store="$RUNNER_TEMP/release-check.p12"
+          check_password="$(openssl rand -hex 24)"
+
+          if ! keytool -importkeystore \
+            -srckeystore "$RUNNER_TEMP/release.jks" \
+            -srcstoretype JKS \
+            -srcstorepass "$KEYSTORE_PASSWORD" \
+            -srcalias "$KEY_ALIAS" \
+            -srckeypass "$KEY_PASSWORD" \
+            -destkeystore "$check_store" \
+            -deststoretype PKCS12 \
+            -deststorepass "$check_password" \
+            -destkeypass "$check_password" \
+            -noprompt >/dev/null 2>&1; then
+            echo "::error::Release keystore, alias, or password secrets do not match. Re-upload all four signing secrets from the same local .jks file."
+            exit 1
+          fi
+          rm -f "$check_store"
+
       - name: Build release APK
         run: |
           chmod +x gradlew
@@ -55,13 +89,11 @@ jobs:
 
       - name: Sign and name APK
         env:
-          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
-          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
           UNSIGNED="$(find "$GITHUB_WORKSPACE" -path '*/release/*' -name '*.apk' -print -quit)"
           if [ -z "$UNSIGNED" ]; then
