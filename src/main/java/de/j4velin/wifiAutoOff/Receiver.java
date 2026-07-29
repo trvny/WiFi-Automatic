@@ -75,12 +75,13 @@ public class Receiver extends BroadcastReceiver {
         String action = (id == TIMER_SCREEN_OFF) ? "SCREEN_OFF_TIMER" : "NO_NETWORK_TIMER";
         Intent timerIntent =
                 new Intent(context, Receiver.class).putExtra("timer", id).setAction(action);
-        if (PendingIntent.getBroadcast(context, id, timerIntent, PendingIntent.FLAG_NO_CREATE) ==
-                null) {
+        if (PendingIntent.getBroadcast(context, id, timerIntent,
+                PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE) == null) {
             Util.setTimer(context, AlarmManager.RTC_WAKEUP,
                     System.currentTimeMillis() + 60000 * time, PendingIntent
                             .getBroadcast(context, id, timerIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT));
+                                    PendingIntent.FLAG_UPDATE_CURRENT |
+                                            PendingIntent.FLAG_IMMUTABLE));
             Log.insert(context, context.getString(
                     id == TIMER_SCREEN_OFF ? R.string.event_screen_off_timer :
                             R.string.event_no_network_timer, time), Log.Type.TIMER);
@@ -99,8 +100,8 @@ public class Receiver extends BroadcastReceiver {
     private boolean stopTimer(final Context context, int id) {
         Intent timerIntent = new Intent(context, Receiver.class).putExtra("timer", id)
                 .setAction(id == TIMER_SCREEN_OFF ? "SCREEN_OFF_TIMER" : "NO_NETWORK_TIMER");
-        PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(context, id, timerIntent, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, timerIntent,
+                PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
         if (pendingIntent != null) {
             ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).cancel(pendingIntent);
             pendingIntent.cancel();
@@ -238,7 +239,7 @@ public class Receiver extends BroadcastReceiver {
      * @return true if the automatic turn-off should NOT happen
      */
     private static boolean shouldSkipAutoOff(final Context context,
-                                             final SharedPreferences prefs) {
+                                              final SharedPreferences prefs) {
         // "only turn off when battery is below X%"
         if (prefs.getBoolean("off_only_low_battery", false)) {
             Intent battery = context.getApplicationContext()
