@@ -69,7 +69,8 @@ public class APILevel26ForegroundService extends Service {
                         PendingIntent.getActivity(this, 1,
                                 new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
                                         .putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName())
-                                        .putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID), 0))
+                                        .putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID),
+                                PendingIntent.FLAG_IMMUTABLE))
                         .build());
         synchronized (CHANNEL_ID) {
             if (!registered) {

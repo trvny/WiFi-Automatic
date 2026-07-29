@@ -34,6 +34,9 @@ import java.util.Date;
  */
 abstract class Start {
 
+    private static final int PENDING_INTENT_FLAGS =
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+
     /**
      * Creates the ON_AT and OFF_AT timers
      *
@@ -59,7 +62,7 @@ abstract class Start {
 
             PendingIntent pi = PendingIntent.getBroadcast(c, Receiver.TIMER_ON_AT,
                     new Intent(c, Receiver.class).putExtra("changeWiFi", true).setAction("ON_AT"),
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    PENDING_INTENT_FLAGS);
             Util.setTimer(c, AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
             if (BuildConfig.DEBUG) Logger.log(
                     "ON_AT alarm set at " + new Date(cal.getTimeInMillis()).toLocaleString());
@@ -67,7 +70,7 @@ abstract class Start {
         } else { // stop timer
             am.cancel(PendingIntent.getBroadcast(c, Receiver.TIMER_ON_AT,
                     new Intent(c, Receiver.class).putExtra("changeWiFi", true).setAction("ON_AT"),
-                    PendingIntent.FLAG_UPDATE_CURRENT));
+                    PENDING_INTENT_FLAGS));
         }
         if (prefs.getBoolean("off_at", false)) {
             String[] time = prefs.getString("off_at_time", Receiver.OFF_AT_TIME).split(":");
@@ -85,14 +88,14 @@ abstract class Start {
 
             PendingIntent pi = PendingIntent.getBroadcast(c, Receiver.TIMER_OFF_AT,
                     new Intent(c, Receiver.class).putExtra("changeWiFi", false).setAction("OFF_AT"),
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    PENDING_INTENT_FLAGS);
             Util.setTimer(c, AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
             if (BuildConfig.DEBUG) Logger.log(
                     "OFF_AT alarm set at " + new Date(cal.getTimeInMillis()).toLocaleString());
         } else { // stop timer
             am.cancel(PendingIntent.getBroadcast(c, Receiver.TIMER_OFF_AT,
                     new Intent(c, Receiver.class).putExtra("changeWiFi", false).setAction("OFF_AT"),
-                    PendingIntent.FLAG_UPDATE_CURRENT));
+                    PENDING_INTENT_FLAGS));
         }
         if (BuildConfig.DEBUG) Logger.log("ON/OFF timers set");
     }
@@ -116,11 +119,11 @@ abstract class Start {
             am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval,
                     PendingIntent.getBroadcast(c, Receiver.TIMER_ON_EVERY,
                             new Intent(c, Receiver.class).putExtra("changeWiFi", true)
-                                    .setAction("ON_EVERY"), PendingIntent.FLAG_UPDATE_CURRENT));
+                                    .setAction("ON_EVERY"), PENDING_INTENT_FLAGS));
         } else { // stop timer
             am.cancel(PendingIntent.getBroadcast(c, Receiver.TIMER_ON_EVERY,
                     new Intent(c, Receiver.class).putExtra("changeWiFi", true)
-                            .setAction("ON_EVERY"), PendingIntent.FLAG_UPDATE_CURRENT));
+                            .setAction("ON_EVERY"), PENDING_INTENT_FLAGS));
         }
 
         c.getPackageManager().setComponentEnabledSetting(new ComponentName(c, UnlockReceiver.class),
