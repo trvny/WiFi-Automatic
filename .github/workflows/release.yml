@@ -28,15 +28,17 @@ jobs:
       - name: Resolve release names
         id: release
         shell: bash
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          tag="${{ github.event.inputs.tag || github.ref_name }}"
-          version="${tag#v}"
-          if [ -z "$version" ] || [ "$version" = "$tag" ]; then
-            echo "::error::Release tag must start with v."
+          tag="${INPUT_TAG:-$REF_NAME}"
+          if [[ ! "$tag" =~ ^v[0-9A-Za-z][0-9A-Za-z._-]*$ ]]; then
+            echo "::error::Release tag must start with v and contain only filename-safe characters."
             exit 1
           fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-java@v5
         with:
@@ -54,6 +56,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
@@ -63,7 +66,7 @@ jobs:
             find "$GITHUB_WORKSPACE" -name '*.apk' -print
             exit 1
           fi
-          OUT="$GITHUB_WORKSPACE/wifi-automatic-${{ steps.release.outputs.version }}.apk"
+          OUT="$GITHUB_WORKSPACE/wifi-automatic-$RELEASE_VERSION.apk"
           "$BT/zipalign" -f 4 "$UNSIGNED" "$OUT"
           "$BT/apksigner" sign \
             --ks "$RUNNER_TEMP/release.jks" \
