@@ -108,8 +108,11 @@ jobs:
             --ks-pass "env:KEYSTORE_PASSWORD" \
             --ks-key-alias "$KEY_ALIAS" \
             --key-pass "env:KEY_PASSWORD" \
+            --v1-signing-enabled false \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
             "$OUT"
-          "$BT/apksigner" verify "$OUT"
+          "$BT/apksigner" verify --verbose "$OUT"
           echo "APK=$OUT" >> "$GITHUB_ENV"
 
       - name: Create GitHub Release
