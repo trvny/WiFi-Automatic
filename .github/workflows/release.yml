@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Release tag (for example v1.9.2)"
+        description: "Existing release tag (for example v1.9.2)"
         required: true
         type: string
 
@@ -23,7 +23,10 @@ jobs:
           use-policy-store: true
           api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
 
-      - uses: actions/checkout@v7
+      - name: Checkout release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
 
       - name: Resolve release names
         id: release
