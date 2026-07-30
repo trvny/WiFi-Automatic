@@ -1,0 +1,145 @@
+name: Apply Bluetooth settings layout fix
+
+on:
+  push:
+    branches: [ fix/place-bluetooth-timer-in-section ]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: fix/place-bluetooth-timer-in-section
+
+      - name: Apply focused changes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new):
+              file = Path(path)
+              text = file.read_text()
+              if old not in text:
+                  raise SystemExit(f"Expected text not found in {path}: {old[:100]!r}")
+              file.write_text(text.replace(old, new, 1))
+
+          top_timer = '''    <PreferenceCategory android:title="@string/bluetooth_auto_off_category">
+                  <CheckBoxPreference
+                      android:defaultValue="false"
+                      android:key="bluetooth_auto_off_idle"
+                      android:summary="@string/bluetooth_auto_off_idle_summary"
+                      android:title="@string/bluetooth_auto_off_idle"/>
+              </PreferenceCategory>
+          '''
+          old_dependent = '''        <CheckBoxPreference
+                      android:defaultValue="false"
+                      android:key="wifi_bluetooth_connected"
+                      android:title="@string/wifi_off_bluetooth_connected"/>
+          '''
+          timer_in_section = '''        <CheckBoxPreference
+                      android:defaultValue="false"
+                      android:key="bluetooth_auto_off_idle"
+                      android:summary="@string/bluetooth_auto_off_idle_summary"
+                      android:title="@string/bluetooth_auto_off_idle"/>
+          '''
+
+          for path in (
+              "src/main/res/xml/preferences.xml",
+              "src/main/res/xml-v26/preferences.xml",
+          ):
+              replace(path, top_timer, "")
+              replace(path, old_dependent, timer_in_section)
+
+          dependency_ui = '''        final CheckBoxPreference bluetoothConnected = (CheckBoxPreference) findPreference("wifi_bluetooth_connected");
+                  final CheckBoxPreference wifiToggleBluetooth = (CheckBoxPreference) findPreference("wifi_toggle_bluetooth");
+          
+                  if (!wifiToggleBluetooth.isChecked()) {
+                      bluetoothConnected.setEnabled(false);
+                      bluetoothConnected.setChecked(false);
+                  }
+          
+                  wifiToggleBluetooth.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                      @Override
+                      public boolean onPreferenceClick(Preference preference) {
+                          if (wifiToggleBluetooth.isChecked()) {
+                              bluetoothConnected.setEnabled(true);
+                          } else {
+                              bluetoothConnected.setEnabled(false);
+                              bluetoothConnected.setChecked(false);
+                          }
+                          return true;
+                      }
+                  });
+          
+          '''
+          replace(
+              "src/main/java/de/j4velin/wifiAutoOff/Preferences.java",
+              dependency_ui,
+              ""
+          )
+
+          replace(
+              "src/main/java/de/j4velin/wifiAutoOff/Receiver.java",
+              "import android.bluetooth.BluetoothDevice;\n",
+              ""
+          )
+          connected_method = '''    private static boolean isBluetoothConnected() {
+                  BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+                  if (adapter == null) return false;
+                  for (BluetoothDevice device : adapter.getBondedDevices()) {
+                      try {
+                          Method m = device.getClass().getMethod("isConnected", (Class[]) null);
+                          if ((boolean) m.invoke(device, (Object[]) null)) {
+                              return true;
+                          }
+                      } catch (Exception e) {
+                          // hidden API not available - assume not connected
+                      }
+                  }
+                  return false;
+              }
+          
+          '''
+          replace(
+              "src/main/java/de/j4velin/wifiAutoOff/Receiver.java",
+              connected_method,
+              ""
+          )
+          old_toggle = '''                        if (prefs.getBoolean("wifi_toggle_bluetooth", false)) {
+                                      if (!prefs.getBoolean("wifi_bluetooth_connected", false)) {
+                                          setBluetooth(false);
+                                      }
+                                      else if (isBluetoothConnected() == false) {
+                                          setBluetooth(false);
+                                      }
+                                  }
+          '''
+          new_toggle = '''                        if (prefs.getBoolean("wifi_toggle_bluetooth", false)) {
+                                      setBluetooth(false);
+                                  }
+          '''
+          replace(
+              "src/main/java/de/j4velin/wifiAutoOff/Receiver.java",
+              old_toggle,
+              new_toggle
+          )
+          replace(
+              "src/main/java/de/j4velin/wifiAutoOff/Receiver.java",
+              old_toggle,
+              new_toggle
+          )
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-bluetooth-layout-fix.yml
+          git add src/main
+          git commit -m "fix: place Bluetooth timer in Bluetooth section"
+          git push
