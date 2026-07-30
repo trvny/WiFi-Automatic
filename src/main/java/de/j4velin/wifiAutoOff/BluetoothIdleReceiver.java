@@ -6,9 +6,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 
 import java.lang.reflect.Method;
 
@@ -55,6 +57,23 @@ public class BluetoothIdleReceiver extends BroadcastReceiver {
         } else {
             stopTimer(context);
         }
+    }
+
+    static void updateEnabledState(final Context context, final SharedPreferences prefs,
+                                   final boolean enabled) {
+        if (!enabled) stopTimer(context);
+
+        PackageManager packageManager = context.getPackageManager();
+        int componentState = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        packageManager.setComponentEnabledSetting(
+                new ComponentName(context, BluetoothIdleReceiver.class), componentState,
+                PackageManager.DONT_KILL_APP);
+        packageManager.setComponentEnabledSetting(
+                new ComponentName(context, BluetoothIdleAlarmReceiver.class), componentState,
+                PackageManager.DONT_KILL_APP);
+
+        if (enabled) updateTimer(context, prefs);
     }
 
     @SuppressWarnings("deprecation")
