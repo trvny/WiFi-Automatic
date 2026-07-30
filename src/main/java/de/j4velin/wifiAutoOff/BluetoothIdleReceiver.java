@@ -21,7 +21,8 @@ public class BluetoothIdleReceiver extends BroadcastReceiver {
 
     private static PendingIntent getTimerIntent(final Context context, int flags) {
         return PendingIntent.getBroadcast(context, TIMER_REQUEST_CODE,
-                new Intent(context, BluetoothIdleReceiver.class).setAction(TIMER_ACTION), flags);
+                new Intent(context, BluetoothIdleAlarmReceiver.class).setAction(TIMER_ACTION),
+                flags);
     }
 
     private static void startTimer(final Context context) {
@@ -101,21 +102,23 @@ public class BluetoothIdleReceiver extends BroadcastReceiver {
         }
     }
 
+    static void handleTimer(final Context context, final SharedPreferences prefs) {
+        stopTimer(context);
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (prefs.getBoolean("bluetooth_auto_off_idle", false) &&
+                adapter != null && adapter.isEnabled() && !isConnected()) {
+            Log.insert(context, context.getString(R.string.event_bluetooth_idle_off,
+                    TIMEOUT_MINUTES), Log.Type.TIMER);
+            disableBluetooth();
+        }
+    }
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         SharedPreferences prefs = Receiver.getSharedPreferences(context);
 
-        if (TIMER_ACTION.equals(action)) {
-            stopTimer(context);
-            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            if (prefs.getBoolean("bluetooth_auto_off_idle", false) &&
-                    adapter != null && adapter.isEnabled() && !isConnected()) {
-                Log.insert(context, context.getString(R.string.event_bluetooth_idle_off,
-                        TIMEOUT_MINUTES), Log.Type.TIMER);
-                disableBluetooth();
-            }
-        } else if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+        if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
             stopTimer(context);
         } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
             updateTimer(context, prefs);
