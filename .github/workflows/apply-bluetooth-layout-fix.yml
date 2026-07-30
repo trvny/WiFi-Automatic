@@ -1,8 +1,8 @@
 name: Apply Bluetooth settings layout fix
 
 on:
-  push:
-    branches: [ fix/place-bluetooth-timer-in-section ]
+  pull_request:
+    branches: [ master ]
 
 permissions:
   contents: write
