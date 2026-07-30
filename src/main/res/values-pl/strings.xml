@@ -12,11 +12,12 @@
     <string name="turn_wifi_off_when_">Wyłącz WiFi, gdy&#8230;</string>
     <string name="screen_is_off">ekran jest wyłączony</string>
     <string name="not_connected_to_any_network">brak połączenia z jakąkolwiek siecią</string>
-    <string name="enable_disable_bluetooth">Automatyzacja Bluetooth</string>
+    <string name="bluetooth_auto_off_category">Automatyczne wyłączanie Bluetooth</string>
+    <string name="enable_disable_bluetooth">Powiązanie WiFi i Bluetooth</string>
     <string name="when_wifi_state_changes">Przełączaj Bluetooth razem ze stanem WiFi</string>
     <string name="wifi_off_bluetooth_connected">&#8230;chyba że urządzenie Bluetooth jest połączone</string>
-    <string name="bluetooth_auto_off_idle">Wyłącz Bluetooth po 10 min bez połączenia</string>
-    <string name="bluetooth_auto_off_idle_summary">Licznik zostanie anulowany, gdy urządzenie Bluetooth się połączy</string>
+    <string name="bluetooth_auto_off_idle">Wyłącz Bluetooth po 10 min bez podłączonego urządzenia</string>
+    <string name="bluetooth_auto_off_idle_summary">Działa niezależnie od automatyzacji WiFi. Licznik zostanie anulowany po połączeniu urządzenia Bluetooth.</string>
     <string name="dont_turn_off_when_">Nie wyłączaj WiFi, gdy&#8230;</string>
     <string name="only_low_battery">poziom baterii przekracza 50%</string>
     <string name="keep_ssids">połączono z tymi sieciami</string>
