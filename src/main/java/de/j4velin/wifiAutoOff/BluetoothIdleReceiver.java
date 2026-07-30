@@ -59,8 +59,8 @@ public class BluetoothIdleReceiver extends BroadcastReceiver {
         }
     }
 
-    static void updateEnabledState(final Context context, final SharedPreferences prefs,
-                                   final boolean enabled) {
+    static void updateEnabledState(final Context context, final SharedPreferences prefs) {
+        boolean enabled = prefs.getBoolean("bluetooth_auto_off_idle", false);
         if (!enabled) stopTimer(context);
 
         PackageManager packageManager = context.getPackageManager();

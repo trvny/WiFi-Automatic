@@ -81,7 +81,8 @@ public class Preferences extends PreferenceActivity {
     private AppCompatDelegate mDelegate;
 
     private final static Set<String> NON_DISABLE_PREFS =
-            new HashSet<>(Arrays.asList("notice", "status", "log"));
+            new HashSet<>(Arrays.asList("notice", "status", "log",
+                    "bluetooth_auto_off_idle"));
 
     /**
      * whether the location settings should be enabled by the enable/disable app switch
@@ -361,6 +362,19 @@ public class Preferences extends PreferenceActivity {
         });
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final CheckBoxPreference bluetoothIdle =
+                (CheckBoxPreference) findPreference("bluetooth_auto_off_idle");
+        bluetoothIdle.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(final Preference preference,
+                                              final Object newValue) {
+                prefs.edit().putBoolean("bluetooth_auto_off_idle",
+                        (Boolean) newValue).apply();
+                BluetoothIdleReceiver.updateEnabledState(Preferences.this, prefs);
+                return true;
+            }
+        });
 
         final CheckBoxPreference screen_off = (CheckBoxPreference) findPreference("off_screen_off");
         screen_off.setSummary(getString(R.string.for_at_least,

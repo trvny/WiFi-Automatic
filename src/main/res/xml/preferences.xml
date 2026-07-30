@@ -3,6 +3,13 @@
 
     <de.j4velin.wifiAutoOff.StatusPreference
         android:key="status"/>
+    <PreferenceCategory android:title="@string/bluetooth_auto_off_category">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="bluetooth_auto_off_idle"
+            android:summary="@string/bluetooth_auto_off_idle_summary"
+            android:title="@string/bluetooth_auto_off_idle"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/turn_wifi_on_">
         <CheckBoxPreference
             android:defaultValue="false"
@@ -61,11 +68,6 @@
             android:defaultValue="false"
             android:key="wifi_bluetooth_connected"
             android:title="@string/wifi_off_bluetooth_connected"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="bluetooth_auto_off_idle"
-            android:summary="@string/bluetooth_auto_off_idle_summary"
-            android:title="@string/bluetooth_auto_off_idle"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/general_settings">
         <CheckBoxPreference
