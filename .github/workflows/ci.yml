@@ -37,13 +37,39 @@ jobs:
           chmod +x gradlew
           ./gradlew --no-daemon clean assembleFdroidDebug
 
-      - name: Locate APK
+      - name: Sign and verify debug APK
         run: |
-          echo "Built APKs:"
-          find "$GITHUB_WORKSPACE" -name '*.apk' -print
+          BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          UNSIGNED="$(find "$GITHUB_WORKSPACE" -path '*/fdroid/debug/*' -name '*.apk' -print -quit)"
+          if [ -z "$UNSIGNED" ]; then
+            echo "::error::No debug APK found."
+            find "$GITHUB_WORKSPACE" -name '*.apk' -print
+            exit 1
+          fi
+
+          keytool -genkeypair \
+            -keystore "$RUNNER_TEMP/debug.keystore" \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000
+
+          OUT="$GITHUB_WORKSPACE/wifi-automatic-debug.apk"
+          "$BT/zipalign" -f 4 "$UNSIGNED" "$OUT"
+          "$BT/apksigner" sign \
+            --ks "$RUNNER_TEMP/debug.keystore" \
+            --ks-pass pass:android \
+            --ks-key-alias androiddebugkey \
+            --key-pass pass:android \
+            "$OUT"
+          "$BT/apksigner" verify --verbose --print-certs "$OUT"
+          echo "APK=$OUT" >> "$GITHUB_ENV"
 
       - uses: actions/upload-artifact@v7
         with:
-          name: debug-apk
-          path: '**/build/outputs/apk/**/*.apk'
+          name: installable-debug-apk
+          path: ${{ env.APK }}
           if-no-files-found: error
