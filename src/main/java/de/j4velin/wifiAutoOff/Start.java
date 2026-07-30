@@ -110,6 +110,11 @@ abstract class Start {
     static void start(final Context c) {
         createTimers(c);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+        prefs.edit().putInt("low_battery_level", 50).apply();
+        boolean appEnabled = c.getPackageManager().getComponentEnabledSetting(
+                new ComponentName(c, Receiver.class)) !=
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        BluetoothIdleReceiver.updateEnabledState(c, prefs, appEnabled);
         AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         if (prefs.getBoolean("on_every", false)) {
             long interval = prefs.contains("on_every_time_min") ?
@@ -135,7 +140,9 @@ abstract class Start {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // on O and later, the APILevel26ForegroundService handles this
-            if (prefs.getBoolean("off_screen_off", true) || prefs.getBoolean("on_unlock", true) || prefs.getBoolean("on_screen_on", false)) {
+            if (prefs.getBoolean("off_screen_off", true) ||
+                    prefs.getBoolean("on_unlock", true) ||
+                    prefs.getBoolean("on_screen_on", false)) {
                 c.startService(new Intent(c, ScreenChangeDetector.class));
             } else {
                 c.stopService(new Intent(c, ScreenChangeDetector.class));
