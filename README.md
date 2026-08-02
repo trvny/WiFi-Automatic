@@ -26,7 +26,7 @@ This app has a similiar effect like setting the "WiFi sleep policy" in Android t
 
 The project is distributed under [Apache-2.0](LICENSE.md). Third-party names,
 logos, store listings and hosted images remain the property of their respective
-owners. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+owners. See [THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md).
 
 ## Other stuff
 
