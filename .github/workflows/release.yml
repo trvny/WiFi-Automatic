@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing release tag (for example v1.9.2)"
+        description: "Existing release tag (for example v2.0.0)"
         required: true
         type: string
 
@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.tag || github.ref }}
+          persist-credentials: false
 
       - name: Resolve release names
         id: release
@@ -43,6 +44,16 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
 
+      - name: Verify declared version
+        env:
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          declared="$(sed -n 's/.*versionName "\([^"]*\)".*/\1/p' build.gradle | head -1)"
+          if [ -z "$declared" ] || [ "$declared" != "$RELEASE_VERSION" ]; then
+            echo "::error::Tag version $RELEASE_VERSION does not match app versionName ${declared:-missing}."
+            exit 1
+          fi
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -55,6 +66,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          set -euo pipefail
           for name in KEYSTORE_B64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
             if [ -z "${!name}" ]; then
               echo "::error::Missing Actions secret: $name"
@@ -94,6 +106,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           RELEASE_VERSION: ${{ steps.release.outputs.version }}
         run: |
+          set -euo pipefail
           BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
           UNSIGNED="$(find "$GITHUB_WORKSPACE" -path '*/release/*' -name '*.apk' -print -quit)"
           if [ -z "$UNSIGNED" ]; then
@@ -110,6 +123,7 @@ jobs:
             --key-pass "env:KEY_PASSWORD" \
             "$OUT"
           "$BT/apksigner" verify --verbose "$OUT"
+          "$BT/aapt2" dump badging "$OUT" | grep -F "versionName='$RELEASE_VERSION'"
           echo "APK=$OUT" >> "$GITHUB_ENV"
 
       - name: Create GitHub Release
