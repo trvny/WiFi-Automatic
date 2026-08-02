@@ -1,4 +1,7 @@
 WiFi-Automatic
 Copyright 2013-2017 Thomas Hoffmann
+Copyright 2026 trvny for modifications
 
-This product includes software developed at j4velin development (http://j4velin.de) by Thomas Hoffmann (http://hoffmann-thomas.de)
+This product includes software developed at j4velin development (http://j4velin.de) by Thomas Hoffmann (http://hoffmann-thomas.de).
+
+This repository is a modified fork of j4velin/WiFi-Automatic. The fork includes AndroidX and build-toolchain modernization, Android compatibility fixes, release automation, Polish translations and independent Bluetooth idle auto-off functionality. Modified source files carry a short notice referring to this file.
