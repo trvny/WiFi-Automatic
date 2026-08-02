@@ -1,3 +1,7 @@
+/*
+ * Modified by trvny in 2026.
+ * See NOTICE for upstream attribution and a summary of fork changes.
+ */
 package de.j4velin.wifiAutoOff;
 
 import android.annotation.TargetApi;
