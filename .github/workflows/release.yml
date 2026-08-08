@@ -59,6 +59,9 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
       - name: Validate release signing secrets
         env:
           KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
@@ -97,7 +100,7 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon clean assembleFdroidRelease
+          ./gradlew --no-daemon --build-cache assembleFdroidRelease
 
       - name: Sign and name APK
         env:
