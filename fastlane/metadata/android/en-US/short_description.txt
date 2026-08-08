@@ -1,1 +1,0 @@
-Automatically disable and re-enable WiFi based on screen and Bluetooth state to save battery.

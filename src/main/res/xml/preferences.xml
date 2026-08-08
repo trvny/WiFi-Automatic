@@ -60,7 +60,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wifi_bluetooth_connected"
-            android:title="@string/wifi_off_bluetooth_connected"/>
+            android:layout="@layout/preference_hidden"/>
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="bluetooth_auto_off_idle"

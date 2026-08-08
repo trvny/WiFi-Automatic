@@ -110,11 +110,9 @@ abstract class Start {
     static void start(final Context c) {
         createTimers(c);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-        prefs.edit().putInt("low_battery_level", 50).apply();
-        boolean appEnabled = c.getPackageManager().getComponentEnabledSetting(
-                new ComponentName(c, Receiver.class)) !=
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        BluetoothIdleReceiver.updateEnabledState(c, prefs, appEnabled);
+        prefs.edit().putInt("low_battery_level", 50)
+                .remove("wifi_bluetooth_connected").apply();
+        BluetoothIdleReceiver.updateEnabledState(c, prefs);
         AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         if (prefs.getBoolean("on_every", false)) {
             long interval = prefs.contains("on_every_time_min") ?

@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId "de.j4velin.wifiAutoOff"
-        minSdk 28
+        minSdk 23
         targetSdk 28
         versionCode 1920
         versionName "1.9.2"
