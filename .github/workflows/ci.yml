@@ -37,7 +37,7 @@ jobs:
       - name: Build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon --build-cache assembleFdroidDebug
+          ./gradlew --build-cache assembleFdroidDebug
 
       - name: Sign and verify debug APK
         run: |
