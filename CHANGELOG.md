@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- **Application ID is now `io.github.trvny.wifiautomatic`** (was `de.j4velin.wifiAutoOff`).
+  F-Droid does not accept a fork that keeps the original app's ID, so this build is a
+  separate package: it installs *next to* the original rather than replacing it, and there
+  is no upgrade path from an existing `de.j4velin.wifiAutoOff` install — settings are not
+  carried over. The Java package (`namespace`) is unchanged, so class names and the source
+  tree are untouched.
+- The `PACKAGE_REPLACED` intent filter now matches `${applicationId}` instead of the
+  hard-coded upstream ID, which would otherwise have kept listening for the *original*
+  app's updates.
+
 ## [2.0.0] - 2026-06-17
 
 First release of the `trvny` fork, consolidating work from three upstream forks

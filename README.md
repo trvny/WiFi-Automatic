@@ -22,6 +22,14 @@ This app has a similiar effect like setting the "WiFi sleep policy" in Android t
 
 <b>You can download the original app for free from the <a href="https://play.google.com/store/apps/details?id=de.j4velin.wifiAutoOff">Play Store</a> or from <a href="https://f-droid.org/repository/browse/?fdfilter=wifi+automatic&fdid=de.j4velin.wifiAutoOff">F-Droid</a></b>
 
+## Application ID
+
+This fork ships as `io.github.trvny.wifiautomatic`, not upstream's `de.j4velin.wifiAutoOff`.
+It therefore installs **alongside** the original app instead of updating it, and settings from
+an existing install are not carried over — uninstall the old one once you are happy with this
+build. The Java package is still `de.j4velin.wifiAutoOff`, so this only affects the installed
+package name, not the code.
+
 ## License and third-party materials
 
 The project is distributed under [Apache-2.0](LICENSE.md). Third-party names,

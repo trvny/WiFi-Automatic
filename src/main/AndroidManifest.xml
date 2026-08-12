@@ -68,7 +68,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED"/>
                 <data
-                    android:path="de.j4velin.wifiAutoOff"
+                    android:path="${applicationId}"
                     android:scheme="package"/>
             </intent-filter>
         </receiver>
