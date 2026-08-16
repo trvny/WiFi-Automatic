@@ -24,7 +24,7 @@ This app has a similiar effect like setting the "WiFi sleep policy" in Android t
 
 ## Application ID
 
-This fork ships as `io.github.trvny.wifiautomatic`, not upstream's `de.j4velin.wifiAutoOff`.
+This fork ships as `trvny.wifiautomatic`, not upstream's `de.j4velin.wifiAutoOff`.
 It therefore installs **alongside** the original app instead of updating it, and settings from
 an existing install are not carried over — uninstall the old one once you are happy with this
 build. The Java package is still `de.j4velin.wifiAutoOff`, so this only affects the installed

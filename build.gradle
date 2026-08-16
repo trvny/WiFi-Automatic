@@ -24,11 +24,7 @@ android {
     compileSdk 37
 
     defaultConfig {
-        // Deliberately different from upstream's "de.j4velin.wifiAutoOff": F-Droid requires a
-        // fork to ship under its own application ID, so this build installs alongside the
-        // original instead of pretending to be an update of it. The Java package (namespace,
-        // below) stays upstream's so the source tree needs no rewrite.
-        applicationId "io.github.trvny.wifiautomatic"
+        applicationId "trvny.wifiautomatic"
         minSdk 28
         targetSdk 28
         versionCode 2100
