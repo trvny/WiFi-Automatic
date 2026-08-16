@@ -68,9 +68,14 @@ jobs:
             --key-pass pass:android \
             "$OUT"
           "$BT/apksigner" verify --verbose --print-certs "$OUT"
+          EXPECTED_APP_ID="$(sed -n 's/.*applicationId "\([^"]*\)".*/\1/p' build.gradle | head -1)"
+          if [ -z "$EXPECTED_APP_ID" ]; then
+            echo "::error::Application ID is missing from build.gradle."
+            exit 1
+          fi
           BADGING="$("$BT/aapt2" dump badging "$OUT")"
-          if ! grep -Fq "package: name='trvny.wifiautomatic'" <<< "$BADGING"; then
-            echo "::error::APK application ID is not trvny.wifiautomatic."
+          if ! grep -Fq "package: name='$EXPECTED_APP_ID'" <<< "$BADGING"; then
+            echo "::error::APK application ID does not match build.gradle ($EXPECTED_APP_ID)."
             printf '%s\n' "$BADGING" | head -1
             exit 1
           fi
