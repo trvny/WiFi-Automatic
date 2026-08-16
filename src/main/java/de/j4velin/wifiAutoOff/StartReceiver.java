@@ -23,7 +23,7 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 /**
- * BroadcastReceiver which receives BOOT_COMPLETE & PACKAGE_REPLACED and then
+ * BroadcastReceiver which receives BOOT_COMPLETED and MY_PACKAGE_REPLACED and then
  * starts all necessary timers
  *
  * @see Start
@@ -33,10 +33,7 @@ public class StartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         if (BuildConfig.DEBUG) Logger.log("received: " + intent.getAction());
-        if (!Intent.ACTION_PACKAGE_REPLACED.equals(intent.getAction()) ||
-                intent.getDataString().contains(context.getPackageName())) {
-            LogDeleteService.enqueueJob(context);
-        }
+        LogDeleteService.enqueueJob(context);
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             // AC already connected on boot?
             try {
