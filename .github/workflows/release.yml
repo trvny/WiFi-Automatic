@@ -126,7 +126,18 @@ jobs:
             --key-pass "env:KEY_PASSWORD" \
             "$OUT"
           "$BT/apksigner" verify --verbose "$OUT"
-          "$BT/aapt2" dump badging "$OUT" | grep -F "versionName='$RELEASE_VERSION'"
+          EXPECTED_APP_ID="$(sed -n 's/.*applicationId "\([^"]*\)".*/\1/p' build.gradle | head -1)"
+          if [ -z "$EXPECTED_APP_ID" ]; then
+            echo "::error::Application ID is missing from build.gradle."
+            exit 1
+          fi
+          BADGING="$("$BT/aapt2" dump badging "$OUT")"
+          if ! grep -Fq "package: name='$EXPECTED_APP_ID'" <<< "$BADGING"; then
+            echo "::error::APK application ID does not match build.gradle ($EXPECTED_APP_ID)."
+            printf '%s\n' "$BADGING" | head -1
+            exit 1
+          fi
+          grep -F "versionName='$RELEASE_VERSION'" <<< "$BADGING"
           echo "APK=$OUT" >> "$GITHUB_ENV"
 
       - name: Create GitHub Release
