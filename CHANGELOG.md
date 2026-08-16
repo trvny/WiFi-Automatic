@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.1] - 2026-08-16
 
 ### Changed
 - **Application ID is now `trvny.wifiautomatic`** (was `de.j4velin.wifiAutoOff`).
@@ -42,4 +42,5 @@ and modernizing the build to a current toolchain.
 - Replaced the legacy Travis configuration and resolved AGP 9 build-gate issues
   (non-final R class, proguard defaults, manifest `<uses-sdk>` removal).
 
+[2.0.1]: https://github.com/trvny/WiFi-Automatic/releases/tag/v2.0.1
 [2.0.0]: https://github.com/trvny/WiFi-Automatic/releases/tag/v2.0.0

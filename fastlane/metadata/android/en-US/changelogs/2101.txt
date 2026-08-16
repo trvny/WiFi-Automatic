@@ -1,0 +1,1 @@
+Changed the fork application ID to trvny.wifiautomatic for F-Droid compatibility and removed obsolete package-replacement handling.
