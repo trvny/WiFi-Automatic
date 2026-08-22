@@ -1,0 +1,33 @@
+name: Copilot code review setup
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/copilot-code-review.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/copilot-code-review.yml"
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Prepare Gradle project
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon help
