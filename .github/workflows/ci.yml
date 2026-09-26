@@ -37,12 +37,12 @@ jobs:
       - name: Build debug APK
         run: |
           chmod +x gradlew
-          ./gradlew --build-cache assembleFdroidDebug
+          ./gradlew --build-cache assembleDebug
 
       - name: Sign and verify debug APK
         run: |
           BT="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
-          UNSIGNED="$(find "$GITHUB_WORKSPACE" -path '*/fdroid/debug/*' -name '*.apk' -print -quit)"
+          UNSIGNED="$(find "$GITHUB_WORKSPACE" -path '*/debug/*' -name '*.apk' -print -quit)"
           if [ -z "$UNSIGNED" ]; then
             echo "::error::No debug APK found."
             find "$GITHUB_WORKSPACE" -name '*.apk' -print
