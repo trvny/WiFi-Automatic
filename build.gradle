@@ -1,50 +1,26 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:9.3.1'
-    }
-}
-
 plugins {
-  id "org.sonarqube" version "7.5.0.8588"
+    id 'com.android.application' version '9.4.1'
+    id 'org.sonarqube' version '7.5.0.8588'
 }
-
-repositories {
-    google()
-    mavenCentral()
-}
-
-apply plugin: 'com.android.application'
 
 android {
-
     compileSdk 37
 
     defaultConfig {
         applicationId "trvny.wifiautomatic"
         minSdk 28
-        targetSdk 28
-        versionCode 2101
-        versionName "2.0.1"
-        if (!project.file("key.properties").exists()) {
-            resValue "string", "maps_api_key", "0000"
-        }
+        targetSdk 28 // apps targeting 29+ can no longer toggle WiFi via WifiManager
+        versionCode 2102
+        versionName "2.0.2"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
         buildConfig = true
-        resValues = true
-    }
-
-    flavorDimensions = ["main"]
-
-    productFlavors {
-        fdroid {
-            dimension "main"
-        }
     }
 
     buildTypes {
@@ -56,15 +32,15 @@ android {
     }
 
     lint {
-        // ExpiredTargetSdkVersion is a Google Play requirement; not applicable to F-Droid builds
+        // ExpiredTargetSdkVersion is a Google Play requirement; this fork is distributed outside Play.
         disable "ExtraTranslation", "ExpiredTargetSdkVersion"
     }
+
     namespace 'de.j4velin.wifiAutoOff'
 }
-
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.core:core:1.19.0'
+    implementation 'androidx.core:core:1.19.1'
 }
