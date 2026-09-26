@@ -85,7 +85,7 @@ jobs:
       - name: Build release APK
         run: |
           chmod +x gradlew
-          ./gradlew --build-cache assembleFdroidRelease
+          ./gradlew --build-cache assembleRelease
 
       - name: Sign and name APK
         env:
