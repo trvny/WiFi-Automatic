@@ -5,7 +5,6 @@
     <string name="at_summary">codziennie o %s</string>
     <string name="every_summary">co %s</string>
     <string name="advanced_wifi_settings">Zaawansowane ustawienia WiFi</string>
-    <string name="more_apps">Więcej aplikacji</string>
     <string name="donate">Wesprzyj autora</string>
     <string name="turn_wifi_on_">Włącz WiFi&#8230;</string>
     <string name="when_device_gets_unlocked">po odblokowaniu urządzenia</string>
@@ -48,26 +47,16 @@
     <string name="general_settings">Ustawienia ogólne</string>
     <string name="airplane_title">Tryb samolotowy</string>
     <string name="airplane_summary">Nie włączaj WiFi w trybie samolotowym</string>
-    <string name="when_entering_location">po wejściu do tych lokalizacji</string>
-    <string name="buy_pro">Darmowa wersja aplikacji obsługuje tylko jedną lokalizację. Przejść teraz na wersję Pro?</string>
-    <string name="location_text">Włącz WiFi po wejściu do tych lokalizacji:</string>
-    <string name="location_summary">Używaj lokalizacji sieci komórkowej do włączania WiFi w określonych miejscach</string>
     <string name="no_connected">WiFi rozłączone</string>
     <string name="click_to_select_network">Dotknij, aby wybrać sieć WiFi</string>
     <string name="wifi_not_enabled">WiFi wyłączone</string>
     <string name="click_to_turn_on">Dotknij, aby włączyć</string>
-    <string name="location_settings_warning">Ustawienia urządzenia uniemożliwiają aplikacji określenie lokalizacji</string>
-    <string name="interval">Interwał:</string>
-    <string name="active_location_scan">Aktywne wyszukiwanie lokalizacji</string>
-    <string name="more_info">Więcej informacji</string>
-    <string name="no_permission">Aplikacja nie ma dostępu do lokalizacji</string>
     <string name="log_empty">Brak wpisów w dzienniku</string>
     <string name="log_summary">Pokazuje ostatnie zdarzenia, które wywołały zmianę stanu WiFi</string>
     <string name="log_title">Dziennik</string>
     <string name="event_airplane">WiFi nie zostało włączone: urządzenie jest w trybie samolotowym</string>
     <string name="event_turn_on">Włączanie WiFi</string>
     <string name="event_turn_off">Wyłączanie WiFi</string>
-    <string name="event_location">Wejście do lokalizacji: %s</string>
     <string name="event_display_off_ignored_ac">Wygaszenie ekranu zignorowane: urządzenie jest podłączone do zasilania</string>
     <string name="event_unlocked">Urządzenie odblokowane</string>
     <string name="event_connected">WiFi połączone</string>
@@ -95,6 +84,4 @@
     <string name="app_enabled">Aplikacja włączona</string>
     <string name="hide_notification">Dotknij, aby ukryć to powiadomienie</string>
     <string name="notification_desc">To powiadomienie jest potrzebne, aby WiFi Automatic działało w tle na Androidzie 8 i nowszym. Możesz wyłączyć jego wyświetlanie.</string>
-    <string name="location_permission_denied">Ta funkcja nie zadziała bez dostępu do lokalizacji</string>
-    <string name="location_permission_29">Włączanie WiFi na podstawie lokalizacji wymaga dostępu do niej także wtedy, gdy aplikacja jest zamknięta lub nieużywana. Przyznać uprawnienie teraz?</string>
 </resources>
