@@ -84,10 +84,6 @@ public class Preferences extends PreferenceActivity {
             new HashSet<>(Arrays.asList("notice", "status", "log",
                     "bluetooth_auto_off_idle"));
 
-    /**
-     * whether the location settings should be enabled by the enable/disable app switch
-     */
-    private boolean disableLocationSettings = false;
 
     private final Handler handler = new Handler();
     private final Runnable signalUpdater = new Runnable() {
@@ -147,10 +143,6 @@ public class Preferences extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     private void enableSettings(final boolean enable) {
         enablePrefGroup(getPreferenceScreen(), enable);
-        if (enable && disableLocationSettings) {
-            // disable locations again if disableLocationSettings is set
-            findPreference("locations").setEnabled(false);
-        }
     }
 
     private static void enablePrefGroup(PreferenceGroup pg, boolean enable) {
@@ -211,22 +203,6 @@ public class Preferences extends PreferenceActivity {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } catch (Exception e) {
                 Toast.makeText(this, R.string.settings_not_found_, Toast.LENGTH_SHORT).show();
-            }
-        } else if (id == R.id.action_apps) {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://search?q=pub:j4velin"))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-            } catch (ActivityNotFoundException anf) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
-                            "https://play.google.com/store/apps/developer?id=j4velin"))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                } catch (ActivityNotFoundException anf2) {
-                    Toast.makeText(this,
-                            "No browser found to load https://play.google.com/store/apps/developer?id=j4velin",
-                            Toast.LENGTH_LONG).show();
-                }
             }
         } else if (id == R.id.action_donate) {
             try {
@@ -543,26 +519,6 @@ public class Preferences extends PreferenceActivity {
                 return true;
             }
         });
-
-        Preference locations = findPreference("locations");
-        if (BuildConfig.FLAVOR.equals("play")) {
-            if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK)) {
-                locations.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(final Preference preference) {
-                        startActivity(new Intent(Preferences.this, Locations.class));
-                        return true;
-                    }
-                });
-            } else {
-                locations.setEnabled(false);
-                disableLocationSettings = true;
-            }
-        } else {
-            locations.setSummary("Not available in F-Droid version");
-            locations.setEnabled(false);
-            disableLocationSettings = true;
-        }
 
         final Preference power = findPreference("power_connected");
         power.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {

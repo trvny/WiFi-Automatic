@@ -18,9 +18,11 @@ This app has a similiar effect like setting the "WiFi sleep policy" in Android t
 *if your device has a cell radio, it might switch to 2G/3G which may consume more power then staying on WiFi
 
 
+## Distribution
 
+This maintained fork is built for F-Droid/source distribution and keeps `targetSdk 28` intentionally. Android 10 (API 29) stopped allowing apps targeting API 29+ to toggle Wi-Fi through `WifiManager.setWifiEnabled()`, while Google Play requires a much newer target SDK. Those requirements are incompatible with the app's core purpose, so there is no Google Play build.
 
-<b>You can download the original app for free from the <a href="https://play.google.com/store/apps/details?id=de.j4velin.wifiAutoOff">Play Store</a> or from <a href="https://f-droid.org/repository/browse/?fdfilter=wifi+automatic&fdid=de.j4velin.wifiAutoOff">F-Droid</a></b>
+The old location-triggered Wi-Fi feature has also been removed. It depended on Google Play Services geofencing and Maps, while the maintained build no longer carries a Play flavor.
 
 ## Application ID
 

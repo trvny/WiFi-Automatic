@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-09-26
+
+### Changed
+- Synced the maintained fork with the useful parts of upstream 2.0.0: Android Gradle Plugin 9.4.1, Gradle 9.8.0, AndroidX Core 1.19.1, and explicit Java 17 compile settings.
+- Collapsed the obsolete F-Droid/Play flavor split into one maintained build. CI and rolling releases now use `assembleDebug` / `assembleRelease`.
+
+### Removed
+- Removed the legacy Google Play, Maps, billing, and geofencing implementation plus its dead resources and preferences.
+- Removed the obsolete "More apps" Play Store menu item.
+
+The fork-specific `trvny.wifiautomatic` application ID, `minSdk 28`, Bluetooth automation, SSID protections, CI, and release machinery remain unchanged.
+
 ## [2.0.1] - 2026-08-16
 
 ### Changed
@@ -42,5 +54,6 @@ and modernizing the build to a current toolchain.
 - Replaced the legacy Travis configuration and resolved AGP 9 build-gate issues
   (non-final R class, proguard defaults, manifest `<uses-sdk>` removal).
 
+[2.0.2]: https://github.com/trvny/WiFi-Automatic/releases/tag/v2.0.2
 [2.0.1]: https://github.com/trvny/WiFi-Automatic/releases/tag/v2.0.1
 [2.0.0]: https://github.com/trvny/WiFi-Automatic/releases/tag/v2.0.0
