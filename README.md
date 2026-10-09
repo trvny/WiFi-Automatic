@@ -26,3 +26,14 @@ Since Android 10 (API level 29), apps are no longer allowed to turn WiFi on or o
 Turning WiFi on and off is the whole point of this app, so it must keep targeting API level 28. Google Play, however, only accepts new apps and updates that target a recent API level, far above 28. An up-to-date version of WiFi Automatic therefore can't be published on Google Play, which is why new versions are only released on F-Droid.
 
 The "turn WiFi on when entering a location" feature was removed as well: it relied on Google Play Services (geofencing and Google Maps), which are not available in the F-Droid build.
+
+
+Additional automation (proposed)
+-------------------------------
+
+- Turn on Wi-Fi when the screen wakes, independently of the unlock event.
+- Skip scheduled Wi-Fi shutoff while the battery is at least 50% or while connected to a configured, protected SSID.
+- Optionally link Bluetooth to Wi-Fi state, without shutting Bluetooth down while a device is connected.
+- Turn Bluetooth off after 10 minutes of having no connected device. This option works independently of Wi-Fi automation.
+
+The new options default to disabled. Protected-SSID detection requires access to the current network name (location permission). Bluetooth toggling also depends on Android version and device restrictions.

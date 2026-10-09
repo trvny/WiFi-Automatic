@@ -1,3 +1,7 @@
+/*
+ * Modified by trvny in 2026.
+ * See NOTICE for upstream attribution and a summary of fork changes.
+ */
 package de.j4velin.wifiAutoOff;
 
 import android.annotation.TargetApi;
@@ -15,7 +19,11 @@ public class QSTileService extends TileService {
         boolean isEnabled = getPackageManager().getComponentEnabledSetting(
                 new ComponentName(QSTileService.this, Receiver.class)) !=
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        Preferences.changeEnableState(getApplicationContext(), !isEnabled);
+        boolean enable = !isEnabled;
+        Preferences.changeEnableState(getApplicationContext(), enable);
+        if (enable) {
+            Start.start(getApplicationContext());
+        }
     }
 
     @Override

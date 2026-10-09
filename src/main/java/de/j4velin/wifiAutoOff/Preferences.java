@@ -81,7 +81,9 @@ public class Preferences extends PreferenceActivity {
     private AppCompatDelegate mDelegate;
 
     private final static Set<String> NON_DISABLE_PREFS =
-            new HashSet<>(Arrays.asList("notice", "status", "log"));
+            new HashSet<>(Arrays.asList("notice", "status", "log",
+                    "bluetooth_auto_off_idle"));
+
 
     private final Handler handler = new Handler();
     private final Runnable signalUpdater = new Runnable() {
@@ -194,7 +196,7 @@ public class Preferences extends PreferenceActivity {
         // action bar overflow menu
         final int id = item.getItemId();
         if (id == R.id.enable) {
-            // handled by the switch view
+            // toggle handled by the action view switch
         } else if (id == R.id.action_wifi_adv) {
             try {
                 startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS)
@@ -336,6 +338,19 @@ public class Preferences extends PreferenceActivity {
         });
 
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final CheckBoxPreference bluetoothIdle =
+                (CheckBoxPreference) findPreference("bluetooth_auto_off_idle");
+        bluetoothIdle.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(final Preference preference,
+                                              final Object newValue) {
+                prefs.edit().putBoolean("bluetooth_auto_off_idle",
+                        (Boolean) newValue).apply();
+                BluetoothIdleReceiver.updateEnabledState(Preferences.this, prefs);
+                return true;
+            }
+        });
 
         final CheckBoxPreference screen_off = (CheckBoxPreference) findPreference("off_screen_off");
         screen_off.setSummary(getString(R.string.for_at_least,
@@ -523,6 +538,21 @@ public class Preferences extends PreferenceActivity {
                 return true;
             }
         });
+
+        findPreference("keep_ssids").setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                newValue != null && !newValue.toString().trim().isEmpty() &&
+                                checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                        PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+                        }
+                        return true;
+                    }
+                });
 
         findPreference("log")
                 .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

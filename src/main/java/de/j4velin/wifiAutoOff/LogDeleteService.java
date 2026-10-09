@@ -24,6 +24,7 @@ public class LogDeleteService extends JobIntentService {
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
                 .set(AlarmManager.RTC, System.currentTimeMillis() + Log.KEEP_DURATION, PendingIntent
                         .getService(this, 0, new Intent(this, LogDeleteService.class),
-                                PendingIntent.FLAG_UPDATE_CURRENT));
+                                PendingIntent.FLAG_UPDATE_CURRENT |
+                                        PendingIntent.FLAG_IMMUTABLE));
     }
 }
