@@ -39,3 +39,9 @@ build/
 *.apk
 *.idsig
 local.properties
+
+# Local tooling / agent state
+.kotlin/
+*.aab
+.claude/
+CLAUDE.local.md
