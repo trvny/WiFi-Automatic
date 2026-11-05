@@ -3,6 +3,17 @@ name: Rolling release
 on: # yamllint disable-line rule:truthy
   push:
     branches: ["master"]
+    paths:
+      - "src/**"
+      - "build.gradle"
+      - "settings.gradle"
+      - "gradle.properties"
+      - "gradle/**"
+      - "gradlew"
+      - "gradlew.bat"
+      - "proguard-project.txt"
+      - ".gitattributes"
+      - ".github/workflows/release.yml"
   workflow_dispatch:
 
 concurrency:
