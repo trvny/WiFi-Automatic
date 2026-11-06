@@ -1,7 +1,7 @@
 # WiFi Automatic
 =============
 
-[![license](https://img.shields.io/github/license/trvny/WiFi-Automatic)](LICENSE.md)
+[![Apache-2.0](https://img.shields.io/github/license/trvny/WiFi-Automatic?logo=opensourceinitiative&logoColor=white&style=flat-square)](https://spdx.org/licenses/Apache-2.0)
 [![CI](https://github.com/trvny/WiFi-Automatic/actions/workflows/ci.yml/badge.svg)](https://github.com/trvny/WiFi-Automatic/actions/workflows/ci.yml)
 
 This is a maintained fork of [j4velin/WiFi-Automatic](https://github.com/j4velin/WiFi-Automatic).
