@@ -28,8 +28,8 @@ Turning WiFi on and off is the whole point of this app, so it must keep targetin
 The "turn WiFi on when entering a location" feature was removed as well: it relied on Google Play Services (geofencing and Google Maps), which are not available in the F-Droid build.
 
 
-Additional automation (proposed)
--------------------------------
+Additional automation
+---------------------
 
 - Turn on Wi-Fi when the screen wakes, independently of the unlock event.
 - Skip scheduled Wi-Fi shutoff while the battery is at least 50% or while connected to a configured, protected SSID.
@@ -37,3 +37,5 @@ Additional automation (proposed)
 - Turn Bluetooth off after 10 minutes of having no connected device. This option works independently of Wi-Fi automation.
 
 The new options default to disabled. Protected-SSID detection requires access to the current network name (location permission). Bluetooth toggling also depends on Android version and device restrictions.
+
+This proposal replaces the earlier build modernization proposal; it is based on upstream 2.0.0 and retains the original application ID, SDK requirements, signing and release configuration.
