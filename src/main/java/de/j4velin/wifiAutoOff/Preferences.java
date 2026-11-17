@@ -84,7 +84,6 @@ public class Preferences extends PreferenceActivity {
             new HashSet<>(Arrays.asList("notice", "status", "log",
                     "bluetooth_auto_off_idle"));
 
-
     private final Handler handler = new Handler();
     private final Runnable signalUpdater = new Runnable() {
         @Override
@@ -196,7 +195,7 @@ public class Preferences extends PreferenceActivity {
         // action bar overflow menu
         final int id = item.getItemId();
         if (id == R.id.enable) {
-            // toggle handled by the action view switch
+            // handled by the switch view
         } else if (id == R.id.action_wifi_adv) {
             try {
                 startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS)

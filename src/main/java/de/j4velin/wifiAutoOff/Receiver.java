@@ -17,7 +17,6 @@
 package de.j4velin.wifiAutoOff;
 
 import android.annotation.SuppressLint;
-import java.lang.reflect.Method;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -38,6 +37,7 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.widget.Toast;
 
+import java.lang.reflect.Method;
 
 /**
  * Class for receiving various events and react on them.
@@ -316,7 +316,6 @@ public class Receiver extends BroadcastReceiver {
                                 .getSystemService(Context.WIFI_SERVICE)).isWifiEnabled()) {
                             changeWiFi(context, true);
                         }
-
                     }
                     if ((pref_on_screen_on && !screenOn) || prefs.getBoolean("on_unlock", true)) {
                         // user unlocked the device -> stop TIMER_SCREEN_OFF, might turn on
