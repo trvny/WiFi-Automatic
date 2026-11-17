@@ -1,4 +1,4 @@
-# WiFi Automatic
+WiFi Automatic
 =============
 
 [![Apache-2.0](https://img.shields.io/github/license/trvny/WiFi-Automatic?logo=opensourceinitiative&logoColor=white&style=flat-square)](https://spdx.org/licenses/Apache-2.0)
