@@ -20,13 +20,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-
 import androidx.core.app.NotificationCompat;
 
 @TargetApi(Build.VERSION_CODES.O)
 public class APILevel26ForegroundService extends Service {
 
-    private static final String CHANNEL_ID = "foregroundService";
+    private final static String CHANNEL_ID = "foregroundService";
 
     public static void start(final Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -36,16 +35,16 @@ public class APILevel26ForegroundService extends Service {
     }
 
     private static void createNotificationChannel(final Context context) {
-        NotificationManager notificationManager =
+        NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "WiFi Automatic",
                 NotificationManager.IMPORTANCE_LOW);
         channel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
         channel.setDescription(context.getString(R.string.notification_desc));
-        notificationManager.createNotificationChannel(channel);
+        mNotificationManager.createNotificationChannel(channel);
     }
 
-    private static final IntentFilter[] EVENT_FILTERS =
+    private final static IntentFilter[] FILTERS =
             new IntentFilter[]{new IntentFilter("android.net.wifi.STATE_CHANGE"),
                     new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED"),
                     new IntentFilter("android.net.wifi.p2p.CONNECTION_STATE_CHANGE"),
@@ -74,8 +73,7 @@ public class APILevel26ForegroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(42,
-                new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.icon_black)
+                new NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.drawable.icon_black)
                         .setContentTitle("WiFi Automatic")
                         .setContentText(getString(R.string.hide_notification))
                         .setOngoing(true)
@@ -101,7 +99,7 @@ public class APILevel26ForegroundService extends Service {
     private void registerEventReceivers() {
         if (eventReceiversRegistered) return;
 
-        for (IntentFilter filter : EVENT_FILTERS) {
+        for (IntentFilter filter : FILTERS) {
             registerReceiver(eventReceiver, filter);
         }
         eventReceiversRegistered = true;

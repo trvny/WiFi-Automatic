@@ -449,7 +449,8 @@ public class Receiver extends BroadcastReceiver {
                             else if (isBluetoothConnected() == false) {
                                 setBluetooth(false);
                             }
-                        }                    }
+                        }
+                    }
                     previousState = nwi2.getState();
                     break;
                 case POWER_CONNECTED:
